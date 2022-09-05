@@ -1,32 +1,31 @@
 package br.edu.infnet.android.showdomilhao
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
+import br.edu.infnet.android.showdomilhao.databinding.FragmentPerguntaBinding
+import br.edu.infnet.android.showdomilhao.model.Pergunta
+import br.edu.infnet.android.showdomilhao.model.Resposta
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [PerguntaFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class PerguntaFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private lateinit var pergunta: MutableList<Pergunta>
+    private var indice: Int = 0
+    private lateinit var jogoActivity: GameActivity
+    private var _binding: FragmentPerguntaBinding? = null
+    private val binding: FragmentPerguntaBinding get() = _binding!!
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+         jogoActivity = activity as GameActivity
+
+
     }
 
     override fun onCreateView(
@@ -34,26 +33,63 @@ class PerguntaFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_pergunta, container, false)
+        //val view = binding.root
+        _binding = FragmentPerguntaBinding.inflate(
+            inflater,
+            container, false)
+
+
+
+        return binding.root
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment PerguntaFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            PerguntaFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        fun newInstance() = PerguntaFragment()
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        pergunta = jogoActivity!!.perguntas
+        pergunta[indice].respostas.shuffle()
+        var listaBtn = listOf<Button>(
+
+            binding.bt1Resposta,
+            binding.bt2Resposta,
+            binding.bt3Resposta,
+            binding.bt4Resposta,
+        )
+        var listaTxt = listOf<TextView>(
+            binding.txt1Resposta,
+            binding.txt2Resposta,
+            binding.txt3Resposta,
+            binding.txt4Resposta,
+
+            )
+        for(x in pergunta[indice].respostas.indices){
+            listaBtn[x].setOnClickListener {
+                _ -> validaResposta(
+                pergunta[indice].respostas[x].resposta,
+                pergunta[indice].certa
+                )
+            }
+            listaTxt[x].text = pergunta[indice].respostas[x].resposta
+
+        }
+    }
+    fun validaResposta(valClique: String, respostaCerta: String){
+        if(valClique == respostaCerta){
+            Log.d("CERTO", valClique)
+            //certa a resposta
+            // muda pra proxima
+
+        }else{
+            Log.d("ERRADO", valClique)
+
+        }
+
+        //errada a resposta
+        //pega o resultado atual de ponto de salvamento
+        ///exibe tela de fim de jogo
+    }
+
 }
