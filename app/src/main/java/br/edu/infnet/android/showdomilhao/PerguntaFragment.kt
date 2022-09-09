@@ -1,5 +1,6 @@
 package br.edu.infnet.android.showdomilhao
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -78,11 +79,19 @@ class PerguntaFragment : Fragment() {
     }
     fun validaResposta(valClique: String, respostaCerta: String){
         if(valClique == respostaCerta){
+            val mediaPlayer = MediaPlayer.create(
+                context,
+                R.raw.certa_resposta)
+            mediaPlayer.start()
             Log.d("CERTO", valClique)
             //certa a resposta
             // muda pra proxima
 
         }else{
+            val mediaPlayer = MediaPlayer.create(
+                context,
+                R.raw.que_pena_voce_errou)
+            mediaPlayer.start()
             Log.d("ERRADO", valClique)
 
         }
