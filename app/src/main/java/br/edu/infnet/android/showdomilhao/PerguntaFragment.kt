@@ -2,6 +2,7 @@ package br.edu.infnet.android.showdomilhao
 
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -25,8 +26,6 @@ class PerguntaFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
          jogoActivity = activity as GameActivity
-
-
     }
 
     override fun onCreateView(
@@ -38,9 +37,6 @@ class PerguntaFragment : Fragment() {
         _binding = FragmentPerguntaBinding.inflate(
             inflater,
             container, false)
-
-
-
         return binding.root
     }
 
@@ -52,6 +48,28 @@ class PerguntaFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         pergunta = jogoActivity!!.perguntas
         pergunta[indice].respostas.shuffle()
+        tocaAudioDoEstado(pergunta[indice].audioIntroducao)
+//        val mediaPlayer = MediaPlayer.create(
+//            context,
+//            pergunta[indice].audioIntroducao
+//        )
+
+        _binding?.txtPergunta?.text = pergunta[indice].questao.toString()
+        object : CountDownTimer(60000, 1000) {
+
+
+            override fun onTick(millisUntilFinished: Long) {
+                _binding?.txtCountDown?.text = "segundos faltantes: " + millisUntilFinished / 1000
+            }
+
+
+            override fun onFinish() {
+                _binding?.txtCountDown?.text = "done!"
+            }
+        }.start()
+
+
+        mediaPlayer.start()
         var listaBtn = listOf<Button>(
 
             binding.bt1Resposta,
@@ -59,24 +77,53 @@ class PerguntaFragment : Fragment() {
             binding.bt3Resposta,
             binding.bt4Resposta,
         )
-        var listaTxt = listOf<TextView>(
-            binding.txt1Resposta,
-            binding.txt2Resposta,
-            binding.txt3Resposta,
-            binding.txt4Resposta,
 
-            )
         for(x in pergunta[indice].respostas.indices){
+            val y = listaBtn[x]
+
+            y.alpha = 0f;
+            y.translationX = 50F;
+
+
+            y.animate().alpha(1f)
+                .translationYBy(-50.0F)
+                .setDuration(1500.toLong());
             listaBtn[x].setOnClickListener {
                 _ -> validaResposta(
                 pergunta[indice].respostas[x].resposta,
                 pergunta[indice].certa
                 )
             }
-            listaTxt[x].text = pergunta[indice].respostas[x].resposta
+            listaBtn[x].text = pergunta[indice].respostas[x].resposta
 
         }
     }
+    fun exibePergunta(){
+        // pega pergunta da lista
+        // decide audio a ser tocado
+        // exibe pergunta e respostas
+    }
+    fun acertouResposta(){
+        //exibe que acertou
+        //salva acerto
+        //faz o calculo de porto seguro
+        //toca audio
+        //aguarda para iniciar a proxima pergunta
+    }
+    fun errouResposta(){
+        //exibe que errou
+        //calcula o quanto ganhou
+        //mostra o erro
+        //salva o quanto ganhou
+    }
+    fun tocaAudioDoEstado(audio: Int){
+        val mediaPlayer = MediaPlayer.create(
+            context,
+            audio //pergunta[indice].audioIntroducao
+        )
+    }
+
+
     fun validaResposta(valClique: String, respostaCerta: String){
         if(valClique == respostaCerta){
             val mediaPlayer = MediaPlayer.create(

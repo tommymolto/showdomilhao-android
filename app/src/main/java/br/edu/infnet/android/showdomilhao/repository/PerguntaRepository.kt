@@ -1,5 +1,6 @@
 package br.edu.infnet.android.showdomilhao.repository
 
+import br.edu.infnet.android.showdomilhao.R
 import br.edu.infnet.android.showdomilhao.model.Pergunta
 import br.edu.infnet.android.showdomilhao.model.Resposta
 
@@ -15,7 +16,8 @@ class PerguntaRepository {
                     Resposta("SANTA CATARINA"),
                     Resposta("GOIÁS"),
                 ),
-                "RIO GRANDE DO SUL"
+                "RIO GRANDE DO SUL",
+                R.raw.primeira_rodada_mil
             ),
             Pergunta(
                 'F',
